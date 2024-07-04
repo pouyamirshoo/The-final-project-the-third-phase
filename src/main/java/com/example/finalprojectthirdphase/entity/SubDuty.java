@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@JsonIdentityInfo(scope = SubDuty.class,generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(scope = SubDuty.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SubDuty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
