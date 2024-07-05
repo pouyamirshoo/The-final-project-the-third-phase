@@ -10,6 +10,7 @@ public record ExpertReturn(Integer id,
                            String address,
                            String postalCode,
                            String nationalCode,
+                           Integer balance,
                            Integer rate,
                            byte[] image) {
 }
