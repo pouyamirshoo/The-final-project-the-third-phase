@@ -59,5 +59,41 @@ public class AdminController {
                 HttpStatus.FOUND);
     }
 
+    @PostMapping("enter_subDuty")
+    public ResponseEntity<SubDutyReturn> enterSubDuty(@Validated @RequestBody SubDutySaveRequest newSubDuty) {
+        SubDuty mappedSubDuty = SubDutyMapper.INSTANCE.subDutySaveRequestToModel(newSubDuty);
+        SubDuty savedSubDuty = subDutyService.saveSubDuty(mappedSubDuty);
+        return new ResponseEntity<>(SubDutyMapper.INSTANCE.modelSubDutyToSaveResponse(savedSubDuty),
+                HttpStatus.CREATED);
+    }
+
+    @GetMapping("findBy_SubDutyId")
+    public ResponseEntity<SubDutyReturn> findBySubDutyId(@RequestParam int id) {
+        SubDuty subDuty = subDutyService.findById(id);
+        return new ResponseEntity<>(SubDutyMapper.INSTANCE.modelSubDutyToSaveResponse(subDuty),
+                HttpStatus.FOUND);
+    }
+
+    @GetMapping("update_SubDuty_Price")
+    public ResponseEntity<SubDutyReturn> updateSubDutyPrice(@RequestParam int id, int newPrice) {
+        SubDuty subDuty = subDutyService.updateSubDutyPrice(newPrice, id);
+        return new ResponseEntity<>(SubDutyMapper.INSTANCE.modelSubDutyToSaveResponse(subDuty),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("update_SubDuty_Description")
+    public ResponseEntity<SubDutyReturn> updateSubDutyDescription(@RequestParam int id, String newDescription) {
+        SubDuty subDuty = subDutyService.updateSubDutyDescription(newDescription, id);
+        return new ResponseEntity<>(SubDutyMapper.INSTANCE.modelSubDutyToSaveResponse(subDuty),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("show_SubDuties_For_One_Duty")
+    public List<SubDutyReturn> showSubDutiesForOneDuty(@RequestParam int id) {
+        Duty duty = dutyService.findById(id);
+        List<SubDuty> subDuties = subDutyService.findByDuty(duty);
+        return SubDutyMapper.INSTANCE.listSubDutyToSaveResponse(subDuties);
+    }
+
 
 }
