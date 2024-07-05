@@ -95,5 +95,49 @@ public class AdminController {
         return SubDutyMapper.INSTANCE.listSubDutyToSaveResponse(subDuties);
     }
 
+    @GetMapping("make_Expert_Accepted")
+    public ResponseEntity<ExpertReturn> makeExpertAccepted(@RequestParam int id, ExpertCondition expertCondition) {
+        Expert expert = expertService.findById(id);
+        Expert updated = expertService.updateExpertCondition(expertCondition, expert);
+        return new ResponseEntity<>(ExpertMapper.INSTANCE.modelExpertToSaveResponse(updated),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("add_Expert_ToSubDuties _Auto")
+    public ResponseEntity<ExpertReturn> addExpertToSubDutiesAuto(@RequestParam int id) {
+        Expert expert = expertService.findById(id);
+        Expert addedExpert = adminService.addExpertToSubDutyAuto(expert);
+        return new ResponseEntity<>(ExpertMapper.INSTANCE.modelExpertToSaveResponse(addedExpert),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("add_Expert_ToSubDuties _Manual")
+    public ResponseEntity<ExpertReturn> addExpertToSubDutiesManual(@RequestParam int id, int subDutyId) {
+        Expert expert = expertService.findById(id);
+        Expert addedExpert = adminService.addExpertToSubDutyManual(expert, subDutyId);
+        return new ResponseEntity<>(ExpertMapper.INSTANCE.modelExpertToSaveResponse(addedExpert),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("remove_Expert_SubDuty")
+    public ResponseEntity<ExpertReturn> removeExpertSubDuty(@RequestParam int id, int subDutyId) {
+        Expert expert = expertService.findById(id);
+        Expert addedExpert = adminService.removeExpertFromSubDuty(expert, subDutyId);
+        return new ResponseEntity<>(ExpertMapper.INSTANCE.modelExpertToSaveResponse(addedExpert),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("delete_duty")
+    public String removeDuty(@RequestParam int id){
+        dutyService.removeDuty(id);
+        return "duty and All relations have been deleted";
+    }
+
+    @DeleteMapping("delete_SubDuty")
+    public String removeSubDuty(@RequestParam int id){
+        subDutyService.removeSubDuty(id);
+        return "subDuty and All relations have been deleted";
+    }
+
 
 }
