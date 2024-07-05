@@ -39,5 +39,25 @@ public class AdminController {
     private final ExpertService expertService;
     private final CustomerService customerService;
 
+    @PostMapping("enter_duty")
+    public ResponseEntity<DutyReturn> enterDuty(@Validated @RequestBody DutySaveRequest newDuty) {
+        Duty mappedDuty = DutyMapper.INSTANCE.dutySaveRequestToModel(newDuty);
+        Duty savedDuty = dutyService.saveDuty(mappedDuty);
+        return new ResponseEntity<>(DutyMapper.INSTANCE.modelDutyToSaveResponse(savedDuty), HttpStatus.CREATED);
+    }
+
+    @GetMapping("show_All_Duties")
+    public List<DutyReturn> showAllDuties() {
+        List<Duty> duties = dutyService.showAllDuties();
+        return DutyMapper.INSTANCE.listDutyToSaveResponse(duties);
+    }
+
+    @GetMapping("findBy_DutyId")
+    public ResponseEntity<DutyReturn> findByDutyId(@RequestParam int id) {
+        Duty duty = dutyService.findById(id);
+        return new ResponseEntity<>(DutyMapper.INSTANCE.modelDutyToSaveResponse(duty),
+                HttpStatus.FOUND);
+    }
+
 
 }
