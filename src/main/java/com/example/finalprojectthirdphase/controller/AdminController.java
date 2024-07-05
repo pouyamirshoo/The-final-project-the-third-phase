@@ -128,16 +128,52 @@ public class AdminController {
     }
 
     @DeleteMapping("delete_duty")
-    public String removeDuty(@RequestParam int id){
+    public String removeDuty(@RequestParam int id) {
         dutyService.removeDuty(id);
         return "duty and All relations have been deleted";
     }
 
     @DeleteMapping("delete_SubDuty")
-    public String removeSubDuty(@RequestParam int id){
+    public String removeSubDuty(@RequestParam int id) {
         subDutyService.removeSubDuty(id);
         return "subDuty and All relations have been deleted";
     }
 
+    @GetMapping("customer_Search")
+    @ResponseBody
+    public List<CustomerReturn> customerSearch(@RequestParam String search) {
+        CustomerSpecificationsBuilder builder = new CustomerSpecificationsBuilder();
+        String operationSet = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
+        Pattern pattern = Pattern.compile("(\\w+?)(" + operationSet + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(
+                    matcher.group(1),
+                    matcher.group(2),
+                    matcher.group(4),
+                    matcher.group(3),
+                    matcher.group(5));
+        }
+        Specification<Customer> spec = builder.build();
+        return CustomerMapper.INSTANCE.listCustomerToSaveResponse(customerService.findAll(spec));
+    }
 
+    @GetMapping("expert_Search")
+    @ResponseBody
+    public List<ExpertReturn> expertSearch(@RequestParam String search) {
+        ExpertSpecificationsBuilder builder = new ExpertSpecificationsBuilder();
+        String operationSet = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
+        Pattern pattern = Pattern.compile("(\\w+?)(" + operationSet + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(
+                    matcher.group(1),
+                    matcher.group(2),
+                    matcher.group(4),
+                    matcher.group(3),
+                    matcher.group(5));
+        }
+        Specification<Expert> spec = builder.build();
+        return ExpertMapper.INSTANCE.listExpertToSaveResponse(expertService.findAll(spec));
+    }
 }
