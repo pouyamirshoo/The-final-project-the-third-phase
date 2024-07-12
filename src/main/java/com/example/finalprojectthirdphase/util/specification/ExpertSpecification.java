@@ -32,6 +32,8 @@ public class ExpertSpecification implements Specification<Expert> {
             case ENDS_WITH -> builder.like(root.get(criteria.getKey()), "%" + criteria.getValue());
             case CONTAINS -> builder.like(root.get(
                     criteria.getKey()), "%" + criteria.getValue() + "%");
+            case JOIN -> builder.equal(root.get("subDuty").get("subDutyName"), criteria.getValue().toString());
+            case JOIIN -> builder.equal(root.get("customer").get("firstName"), criteria.getValue().toString());
         };
     }
 }
