@@ -1,6 +1,7 @@
 package com.example.finalprojectthirdphase.entity;
 
 import com.example.finalprojectthirdphase.entity.enums.ExpertCondition;
+import com.example.finalprojectthirdphase.entity.enums.Role;
 import com.example.finalprojectthirdphase.validation.ValidationCode;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +12,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SoftDelete;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Setter
@@ -23,7 +28,7 @@ import java.util.List;
 @SoftDelete
 @Entity
 @JsonIdentityInfo(scope = Expert.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Expert extends Person {
+public class Expert extends Person implements UserDetails {
     @Column(unique = true, name = "national_code")
     @NotBlank(message = "Expert national code can not be null")
     @ValidationCode
@@ -42,6 +47,10 @@ public class Expert extends Person {
     Integer rate;
     @Min(0)
     Integer balance;
+    @Enumerated(EnumType.STRING)
+    Role role;
+    boolean isEnabled;
+    String verificationToken;
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     List<SubDuty> subDuties;
     @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -50,7 +59,7 @@ public class Expert extends Person {
     @PrePersist
     public void defaultValues() {
         if (expertCondition == null) {
-            expertCondition = ExpertCondition.AWAITING;
+            expertCondition = ExpertCondition.NEW;
         }
         if (balance == null) {
             balance = 0;
@@ -62,6 +71,26 @@ public class Expert extends Person {
 
     public void addSubDuty(SubDuty subDuty) {
         this.subDuties.add(subDuty);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
 }
