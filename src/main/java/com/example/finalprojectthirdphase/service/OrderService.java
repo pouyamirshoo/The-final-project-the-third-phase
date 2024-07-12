@@ -12,6 +12,7 @@ import com.example.finalprojectthirdphase.validation.CreatAndValidationDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -103,5 +104,9 @@ public class OrderService {
     public void removeOrder(int id) {
         Order order = findById(id);
         orderRepository.delete(order);
+    }
+
+    public List<Order> findAll(Specification<Order> orderSpecification) {
+        return orderRepository.findAll(orderSpecification);
     }
 }
