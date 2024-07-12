@@ -20,7 +20,10 @@ public interface ExpertRepository extends JpaRepository<Expert, Integer>, JpaSpe
 
     Optional<Expert> findByNationalCode(String nationalCode);
 
-    Optional<Expert> findByUsernameAndPassword(String username, String password);
-
     List<Expert> findByExpertCondition(ExpertCondition expertCondition);
+
+    Optional<Expert> findByVerificationToken(String token);
+
+    List<Expert> findBySubDuties_SubDutyName(String subDutyName);
+
 }
