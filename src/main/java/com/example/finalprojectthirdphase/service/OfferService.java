@@ -14,6 +14,7 @@ import com.example.finalprojectthirdphase.repository.OfferRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -85,6 +86,10 @@ public class OfferService {
         if (offers.isEmpty())
             throw new NullPointerException("no offer by this condition");
         return offers;
+    }
+
+    public List<Offer> findAll(Specification<Offer> offerSpecification) {
+        return offerRepository.findAll(offerSpecification);
     }
 
     public void rejectOtherOffers(Order order) {
