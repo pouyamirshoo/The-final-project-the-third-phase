@@ -6,7 +6,7 @@ import com.example.finalprojectthirdphase.entity.Request;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = SubDutyMapper.class)
+@Mapper(uses = {SubDutyMapper.class, ExpertMapper.class})
 public interface RequestMapper {
 
     RequestMapper INSTANCE = Mappers.getMapper(RequestMapper.class);
