@@ -12,6 +12,7 @@ import com.example.finalprojectthirdphase.entity.PaymentModel;
 import com.example.finalprojectthirdphase.util.recaptch.RecaptchaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 @ResponseBody
 @RequiredArgsConstructor
 @Validated
+@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 public class PaymentController {
 
     private final OrderService orderService;
