@@ -33,8 +33,6 @@ public class Person {
     @Column(unique = true)
     @NotBlank(message = "username can not be null")
     String username;
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#!%&*])[A-Za-z0-9@#!%&*]{8}$"
-            , message = "password has to be 8 size and must contain at least 1 lower and upper case and 1 digit and 1 char ")
     @NotBlank(message = "password can not be null")
     String password;
     @Column(unique = true)
