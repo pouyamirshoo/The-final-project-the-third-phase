@@ -17,6 +17,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer>, Jp
 
     Optional<Customer> findByPostalCode(String postalCode);
 
-    Optional<Customer> findByUsernameAndPassword(String username, String password);
+    Optional<Customer> findByVerificationToken(String token);
 
 }
