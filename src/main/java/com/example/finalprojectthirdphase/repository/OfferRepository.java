@@ -5,11 +5,12 @@ import com.example.finalprojectthirdphase.entity.Offer;
 import com.example.finalprojectthirdphase.entity.Order;
 import com.example.finalprojectthirdphase.entity.enums.OfferCondition;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface OfferRepository extends JpaRepository<Offer, Integer> {
+public interface OfferRepository extends JpaRepository<Offer, Integer>, JpaSpecificationExecutor<Offer> {
     List<Offer> findByExpert(Expert expert);
 
     List<Offer> findByOrder(Order order);
