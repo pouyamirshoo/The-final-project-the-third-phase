@@ -91,7 +91,7 @@ public class ExpertController {
         takeAndCheckImage.saveExpertImageToHDD(expert.getExpertImage(), expert.getFirstname(), expert.getLastname());
     }
 
-    @GetMapping("update_Expert_Password")
+    @PatchMapping("update_Expert_Password")
     @PreAuthorize("hasRole('ROLE_EXPERT')")
     public String updateExpertPassword(@RequestParam int id, String oldPassword, String newPassword, String confirmPassword) {
         if (!newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#!%&*])[A-Za-z0-9@#!%&*]{8}$")) {

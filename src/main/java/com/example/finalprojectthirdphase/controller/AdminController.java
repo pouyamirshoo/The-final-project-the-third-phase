@@ -92,7 +92,7 @@ public class AdminController {
                 HttpStatus.FOUND);
     }
 
-    @GetMapping("update_SubDuty_Price")
+    @PatchMapping("update_SubDuty_Price")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<SubDutyReturn> updateSubDutyPrice(@RequestParam int id, int newPrice) {
         SubDuty subDuty = subDutyService.updateSubDutyPrice(newPrice, id);
@@ -100,7 +100,7 @@ public class AdminController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("update_SubDuty_Description")
+    @PatchMapping("update_SubDuty_Description")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<SubDutyReturn> updateSubDutyDescription(@RequestParam int id, String newDescription) {
         SubDuty subDuty = subDutyService.updateSubDutyDescription(newDescription, id);
@@ -131,7 +131,7 @@ public class AdminController {
                 HttpStatus.FOUND);
     }
 
-    @GetMapping("make_Expert_Accepted")
+    @PatchMapping("make_Expert_Accepted")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ExpertReturn> makeExpertAccepted(@RequestParam int id, ExpertCondition expertCondition) {
         Expert expert = expertService.findById(id);
@@ -167,7 +167,7 @@ public class AdminController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("block_Expert")
+    @PatchMapping("block_Expert")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ExpertReturn> blockExpert(@RequestParam int id) {
         Expert expert = expertService.findById(id);

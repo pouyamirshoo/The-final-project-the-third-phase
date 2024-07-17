@@ -11,6 +11,7 @@ import com.example.finalprojectthirdphase.mapper.OfferMapper;
 import com.example.finalprojectthirdphase.mapper.OrderMapper;
 import com.example.finalprojectthirdphase.service.*;
 import com.example.finalprojectthirdphase.validation.CreatAndValidationDate;
+import com.example.finalprojectthirdphase.validation.TakeAndCheckImage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class CustomerController {
     private final OrderService orderService;
     private final SubDutyService subDutyService;
     private final OfferService offerService;
+    private final TakeAndCheckImage takeAndCheckImage;
     private final CommentsService commentsService;
     private final CreatAndValidationDate creatAndValidationDate;
 
@@ -72,7 +74,7 @@ public class CustomerController {
                 HttpStatus.FOUND);
     }
 
-    @GetMapping("update_Customer_Password")
+    @PatchMapping("update_Customer_Password")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public String updateCustomerPassword(@RequestParam int id, String oldPassword, String newPassword, String confirmPassword) {
         if (!newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#!%&*])[A-Za-z0-9@#!%&*]{8}$")) {
@@ -153,7 +155,18 @@ public class CustomerController {
         return OfferMapper.INSTANCE.listOfferToSaveResponse(offers);
     }
 
-    @GetMapping("accept_Offer")
+    @GetMapping("save_expert_Image")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public @ResponseBody byte[] saveExpertImage(@RequestParam int id) {
+        Offer offer = offerService.findById(id);
+        byte[] image = offer.getExpert().getExpertImage();
+        String firstname = offer.getExpert().getFirstname();
+        String lastname = offer.getExpert().getLastname();
+        takeAndCheckImage.saveExpertImageToHDD(image, firstname, lastname);
+        return image;
+    }
+
+    @PatchMapping("accept_Offer")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public OrderReturn acceptOffer(@RequestParam int orderId, int offerId) {
         Order order = orderService.findById(orderId);
@@ -164,7 +177,7 @@ public class CustomerController {
         return OrderMapper.INSTANCE.modelOrderToSaveResponse(acceptedOrder);
     }
 
-    @GetMapping("make_Order_OnGoing")
+    @PatchMapping("make_Order_OnGoing")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public OrderReturn makeOrderOnGoing(@RequestParam int id) {
         Order order = orderService.findById(id);
@@ -172,7 +185,7 @@ public class CustomerController {
         return OrderMapper.INSTANCE.modelOrderToSaveResponse(onGoingOrder);
     }
 
-    @GetMapping("make_Order_Done")
+    @PatchMapping("make_Order_Done")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public OrderReturn makeOrderDone(@RequestParam int id) {
         Order order = orderService.findById(id);
@@ -197,7 +210,7 @@ public class CustomerController {
         return Integer.toString(customer.getCustomerBalance());
     }
 
-    @GetMapping("add_Balance")
+    @PatchMapping("add_Balance")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<CustomerReturn> addBalance(@RequestParam int id, int price) {
         Customer customer = customerService.findById(id);
@@ -206,7 +219,7 @@ public class CustomerController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("payBy_Balance")
+    @PatchMapping("payBy_Balance")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<CustomerReturn> payByBalance(@RequestParam int id) {
         Order order = orderService.findById(id);
