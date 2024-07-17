@@ -12,10 +12,11 @@ import com.example.finalprojectthirdphase.validation.CreatAndValidationDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -88,12 +89,15 @@ public class OrderService {
         DateTime needExpert = new DateTime(order.getNeedExpert());
         List<Offer> offers = offerService.findByOrderAndOfferCondition(order, OfferCondition.ONGOING);
         DateTime orderEndTime = creatAndValidationDate.creatPlusDaysDate(needExpert, offers.get(0).getTakeLong());
+        System.out.println(orderEndTime + " +++++++++++++++++++++++++++++");
         if (orderEndTime.isAfterNow())
             throw new WrongDateInsertException("order can not be done before order end time");
         if (orderEndTime.isBeforeNow()) {
             Expert expert = offers.get(0).getExpert();
-            int negativePoint = new DateTime(new Date(System.currentTimeMillis())).getDayOfWeek() - orderEndTime.getDayOfWeek();
+            LocalDateTime nowDate = new LocalDateTime();
+            int negativePoint = Days.daysBetween(needExpert, nowDate.toDateTime()).getDays();
             int newRate = expert.getRate() - negativePoint;
+            System.out.println(newRate + " *******");
             expert.setRate(newRate);
             expertService.forceSave(expert);
         }
